@@ -1,4 +1,5 @@
 <!-- videostream_app/templates/videostream_app/video_list.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,30 +9,19 @@
 </head>
 <body>
     <h1>Video List</h1>
-    <div id="videos-container"></div>
 
-    <script>
-        async function fetchVideos() {
-            const response = await fetch('http://localhost:8000/api/videos/');
-            const videos = await response.json();
-            const videosContainer = document.getElementById('videos-container');
-
-            videos.forEach(video => {
-                const videoElement = document.createElement('div');
-                videoElement.innerHTML = `
-                    <h2>${video.title}</h2>
-                    <video width="320" height="240" controls>
-                        <source src="${video.video_file}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                `;
-                videosContainer.appendChild(videoElement);
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchVideos();
-        });
-    </script>
+    {% for video in videos %}
+        <div>
+            <h2>{{ video.title }}</h2>
+            <p>{{ video.description }}</p>
+            <video width="320" height="240" controls>
+                <source src="{{ video.video_file.url }}" type="{{ video.video_file.file.content_type }}">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    {% endfor %}
 </body>
 </html>
+
+<!-- Add this link where you want to navigate to the upload page -->
+<a href="{% url 'upload-video' %}">Upload Video</a>
